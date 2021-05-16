@@ -22,6 +22,7 @@ class Server:
                 if(data_json["join"]): # Если это сообщение о входе
                     Log(f"{nickname}({addres[0]}:{addres[1]}) was connected!").successfully() # Выводим сообщение о подключении
                     result = f"{nickname} connected!" # Состовляем сообщение о подключении
+                    nickname = "SERVER"
 
                 elif(data_json["left"]): # Если это сообщение о выходе
                     for i in self.clients:
@@ -72,16 +73,19 @@ class Server:
             return(True)
 
     def chat_check(self, chat, user, addres, key=None): # Функция проверки чата
+        print(self.clients)
         if(chat in chat_list): # Если такой чат вообще есть на сервере
+            if(chat not in self.clients):
+                print("Chat is not in self.clients")
+                self.clients[chat] = {}
             if(chat_list[chat]["join_key"]): # Если у чата есть ключ для входа
                 if(key == chat_list[chat]["join_key"]): # Если он совпадает с тем что есть у пользователя
+                    self.clients[chat][addres] = user
                     return(True) # Возвращаем True
                 else: # Иначе(если он не совпадает с тем что у пользователя)
                     return(False) # Возвращаем False
             else: # Если у чата нет ключа для входа
-                if(chat not in self.clients):
-                    self.clients[chat] = {}
-                self.clients[chat] = {addres: user}
+                self.clients[chat][addres] = user
                 return(True) # Так же возвращаем True
         else: # Если чата нет на сервере
             return(False) # возвращаем False

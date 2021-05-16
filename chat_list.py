@@ -4,5 +4,8 @@ chat_list = {
     },
     "#main2": {
         "join_key": None
+    },
+    "#private_chat": {
+        "join_key": "password"
     }
 }
